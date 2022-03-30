@@ -1,11 +1,15 @@
 #pragma once
 
 class Keyword {
-private:
-	char* word;
-	DWORD length;
-	DWORD hits;
-
 public:
-	Keyword(char* name, DWORD bytes);
+//private:
+	DWORD hits;
+	DWORD length;
+	char* word;
+
+//public:
+	Keyword();
+	Keyword(char* keyword);
+	Keyword& operator=(const Keyword& other);
+	~Keyword();
 };

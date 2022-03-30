@@ -3,6 +3,12 @@
 class KeywordsCollection {
 private: 
 	Keyword* words;
+	DWORD size;
+	DWORD capacity;
+
+	void resize();
 public: 
-	KeywordsCollection(char* keywordFileName);
+	KeywordsCollection();
+	void populateKeywords(char* fileName);
+	void addKeyword(Keyword keyword);
 };

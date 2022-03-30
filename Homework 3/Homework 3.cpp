@@ -13,8 +13,8 @@ int main(int argc, char** argv)
 
     char* keywordFileName = argv[1];
 
-    KeywordsCollection keywords(keywordFileName);
+    KeywordsCollection keywords;
+    keywords.populateKeywords(keywordFileName);
 
-   
 }
 
