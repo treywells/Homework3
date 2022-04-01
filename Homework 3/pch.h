@@ -16,5 +16,6 @@
 #include "Keyword.h"
 #include "KeywordsCollection.h"
 #include "PC.h"
+#include "Disk.h"
 
 #endif //PCH_H
