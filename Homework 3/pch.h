@@ -13,6 +13,7 @@
 #include <iostream>
 
 // User Defined Classes
+#include "cpu.h"
 #include "Keyword.h"
 #include "KeywordsCollection.h"
 #include "PC.h"
