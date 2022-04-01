@@ -23,20 +23,64 @@ PC::PC(HANDLE eventQuit, DWORD slots, DWORD sizeOfObject) : eventQuit(eventQuit)
 	head = 0;
 	size = 0;
 
+	empty[0] = eventQuit;
+	empty[1] = semaEmptySlots;
+
+	full[0] = eventQuit;
+	full[1] = semaFullSlots;
+
 }
 
-void PC::Produce(char* source) {
+DWORD PC::Produce(char* source) {
+
+	if (WaitForMultipleObjects(2, empty, false, INFINITE) == WAIT_OBJECT_0) {
+		return QUIT;
+	}
+
+	if (WaitForSingleObject(mutex, INFINITE) != WAIT_OBJECT_0) {
+		printf("The wait for the mutex in Produce, failed\n");
+		exit(-1);
+	}
 
 	memcpy(buf + tail, source, sizeOfObject);
 	tail = (tail + sizeOfObject) % allocatedSpace;
 	size++;
 
+	if (!ReleaseMutex(mutex)) {
+		printf("Releasing the mutex in Produce, failed\n");
+		exit(-1);
+	}
+
+	if (!ReleaseSemaphore(semaFullSlots, 1, NULL)) {
+		printf("Releasing the semaphore in Produce, failed\n");
+		exit(-1);
+	}
+
 }
 
-void PC::Consume(char* destination) {
+DWORD PC::Consume(char* destination) {
+
+	if (WaitForMultipleObjects(2, full, false, INFINITE) == WAIT_OBJECT_0) {
+		return QUIT;
+	}
+
+	if (WaitForSingleObject(mutex, INFINITE) != WAIT_OBJECT_0) {
+		printf("The wait for the mutex in Consume, failed\n");
+		exit(-1);
+	}
 
 	memcpy(destination, buf + head, sizeOfObject);
 	head = (head + sizeOfObject) % allocatedSpace;
 	size++;
+
+	if (!ReleaseMutex(mutex)) {
+		printf("Releasing the mutex in Consume, failed\n");
+		exit(-1);
+	}
+
+	if (!ReleaseSemaphore(semaEmptySlots, 1, NULL)) {
+		printf("Releasing the semaphore in Consume, failed\n");
+		exit(-1);
+	}
 
 }

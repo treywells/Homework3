@@ -12,9 +12,11 @@ class PC {
 	HANDLE semaFullSlots;
 	HANDLE semaEmptySlots;
 	HANDLE mutex;
+	HANDLE empty[2];
+	HANDLE full[2];
 
 public:
 	PC(HANDLE eventQuit, DWORD slots, DWORD sizeOfObject);
-	void Produce(char* source);
-	void Consume(char* destination);
+	DWORD Produce(char* source);
+	DWORD Consume(char* destination);
 };
