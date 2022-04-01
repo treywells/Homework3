@@ -8,7 +8,7 @@ KeywordsCollection::KeywordsCollection() {
 }
 
 void KeywordsCollection::resize() {
-    printf("Resizing\n");
+    //printf("Resizing\n");
     DWORD newCapacity = capacity * 2;
     Keyword* newCollection = new Keyword[newCapacity];
 
@@ -16,6 +16,7 @@ void KeywordsCollection::resize() {
 
     delete[] words;
     words = newCollection;
+    capacity = newCapacity;
 }
 
 void KeywordsCollection::populateKeywords(char* fileName) {
