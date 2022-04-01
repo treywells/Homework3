@@ -31,6 +31,16 @@ Keyword& Keyword::operator=(const Keyword& other) {
 	
 }
 
+Keyword::Keyword(const Keyword& other) {
+	
+	hits = other.hits;
+	length = other.length;
+
+	word = new char[length + 1];
+	memcpy(word, other.word, length + 1);
+
+}
+
 Keyword::~Keyword() {
 	//printf("Destructor called\n");
 	//delete[] word;

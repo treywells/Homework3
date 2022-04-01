@@ -15,5 +15,6 @@
 // User Defined Classes
 #include "Keyword.h"
 #include "KeywordsCollection.h"
+#include "PC.h"
 
 #endif //PCH_H

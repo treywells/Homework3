@@ -11,5 +11,6 @@ public:
 	Keyword();
 	Keyword(char* keyword);
 	Keyword& operator=(const Keyword& other);
+	Keyword(const Keyword& other);
 	~Keyword();
 };
