@@ -11,7 +11,7 @@ class PC {
 	HANDLE eventQuit;
 	HANDLE semaFullSlots;
 	HANDLE semaEmptySlots;
-	HANDLE mutex;
+	CRITICAL_SECTION cs;
 	HANDLE empty[2];
 	HANDLE full[2];
 
