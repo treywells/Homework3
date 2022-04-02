@@ -11,6 +11,8 @@ public:
 	DWORD shadowSize;
 	DWORD slotSize;
 	DWORD b;
+	DWORD l;
+	char* previousShadow;
 	DWORD amountRead;
 
 	Disk(DWORD slots, DWORD longestWord, char* fileName);

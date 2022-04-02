@@ -1,6 +1,6 @@
 #include "pch.h"
 
-Disk::Disk(DWORD slots, DWORD longestWord, char* fileName) : slots(slots) {
+Disk::Disk(DWORD slots, DWORD longestWord, char* fileName) : slots(slots), l(longestWord) {
 
 	if ((file = CreateFile(fileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == NULL) {
 		printf("Opening %s failed\n", fileName);
@@ -8,6 +8,8 @@ Disk::Disk(DWORD slots, DWORD longestWord, char* fileName) : slots(slots) {
 	}
 
 	amountRead = 0;
+    previousShadow = new char[l];
+    memset(previousShadow, 0x20, l);
 
     DWORD sectorSize;
 
@@ -28,6 +30,7 @@ Disk::Disk(DWORD slots, DWORD longestWord, char* fileName) : slots(slots) {
 void Disk::Run() {
 
     DWORD bytesRead;
+    DWORD shadowOffset = shadowSize - l;
 
     for (DWORD i = 0; i < slots; i++) {
         pcEmpty->Produce((char*)&i);
@@ -44,7 +47,10 @@ void Disk::Run() {
             exit(-1);
         }
 
+        // Set the shadow buffers
+        memcpy(buf + slotID * slotSize + shadowOffset, previousShadow, l);
         buf[slotID * slotSize + shadowSize + bytesRead] = NULL;
+        memcpy(previousShadow, buf + slotID * slotSize + shadowSize + bytesRead - l, l);
 
         SearchBuffer searchBuf;
         searchBuf.ptr = buf + slotID * slotSize + shadowSize;
