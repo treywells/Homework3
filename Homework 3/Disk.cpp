@@ -1,6 +1,6 @@
 #include "pch.h"
 
-Disk::Disk(DWORD slots, DWORD longestWord, char* fileName) : slots(slots), l(longestWord) {
+Disk::Disk(DWORD slots, DWORD longestWord, DWORD b, char* fileName) : slots(slots), l(longestWord), b(b) {
 
 	if ((file = CreateFile(fileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL)) == NULL) {
 		printf("Opening %s failed\n", fileName);
@@ -19,7 +19,6 @@ Disk::Disk(DWORD slots, DWORD longestWord, char* fileName) : slots(slots), l(lon
     shadowSize = (longestWord / sectorSize + 1) * sectorSize;
     int nSlots = slots; // how many slots to maintain
     int padding = shadowSize + sectorSize; // both shadow buffers
-    b = 1 << 20; // 1MB in each slot
     slotSize = b + padding; // full slot with padding
     // VirtualAlloc guarantees page-aligned addresses, while the heap does not
     buf = (char*)VirtualAlloc(NULL, (UINT64)nSlots * slotSize,
@@ -61,10 +60,14 @@ void Disk::Run() {
 
     } while (bytesRead > 0);
 
+    pcFull->diskDone = true;
+    pcEmpty->diskDone = true;
+
 }
 
 Disk::~Disk() {
 	delete[] buf;
+    delete[] previousShadow;
 }
 
 

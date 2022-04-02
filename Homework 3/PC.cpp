@@ -61,7 +61,7 @@ DWORD PC::Consume(char* destination) {
 
 	memcpy(destination, buf + head, sizeOfObject);
 	head = (head + sizeOfObject) % allocatedSpace;
-	size++;
+	size--;
 
 	LeaveCriticalSection(&cs);
 

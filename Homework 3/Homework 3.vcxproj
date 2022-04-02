@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cpu.cpp" />
     <ClCompile Include="Homework 3.cpp" />
     <ClCompile Include="Keyword.cpp" />
     <ClCompile Include="KeywordsCollection.cpp" />
@@ -157,8 +158,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PC.cpp" />
+    <ClCompile Include="Disk.cpp" />
+    <ClCompile Include="SearchBuffer.cpp" />
+    <ClCompile Include="Search.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cpu.h" />
+    <ClInclude Include="Disk.h" />
+    <ClInclude Include="ThreadStarters.h" />
+    <ClInclude Include="Search.h" />
+    <ClInclude Include="SearchBuffer.h" />
     <ClInclude Include="PC.h" />
     <ClInclude Include="Keyword.h" />
     <ClInclude Include="KeywordsCollection.h" />

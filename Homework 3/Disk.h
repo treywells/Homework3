@@ -15,7 +15,7 @@ public:
 	char* previousShadow;
 	DWORD amountRead;
 
-	Disk(DWORD slots, DWORD longestWord, char* fileName);
+	Disk(DWORD slots, DWORD longestWord, DWORD b, char* fileName);
 	void Run();
 	~Disk();
 };

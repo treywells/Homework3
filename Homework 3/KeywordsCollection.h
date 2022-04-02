@@ -1,14 +1,14 @@
 #pragma once
 
 class KeywordsCollection {
-private: 
+public: 
 	Keyword* words;
 	DWORD size;
 	DWORD capacity;
+	DWORD longestKeyword;
 
 	void resize();
-public: 
 	KeywordsCollection();
-	void populateKeywords(char* fileName);
+	DWORD populateKeywords(char* fileName);
 	void addKeyword(Keyword keyword);
 };

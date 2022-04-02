@@ -7,10 +7,15 @@
 #ifndef PCH_H
 #define PCH_H
 
+#define QUIT 0
+
 // add headers that you want to pre-compile here
 // Imported headers
 #include <Windows.h>
 #include <iostream>
+#include <Winternl.h>
+#include <psapi.h>
+#include <stdlib.h>
 
 // User Defined Classes
 #include "cpu.h"
@@ -18,5 +23,9 @@
 #include "KeywordsCollection.h"
 #include "PC.h"
 #include "Disk.h"
+#include "SearchBuffer.h"
+#include "Search.h"
+
+#include "ThreadStarters.h"
 
 #endif //PCH_H
