@@ -5,21 +5,21 @@ KeywordsCollection::KeywordsCollection() {
     size = 0;
     capacity = 1;
     words = new Keyword[capacity];
+    longestKeyword = 0;
 }
 
 void KeywordsCollection::resize() {
-    //printf("Resizing\n");
     DWORD newCapacity = capacity * 2;
     Keyword* newCollection = new Keyword[newCapacity];
 
-    memcpy(newCollection, words, size * sizeof(char));
+    memcpy(newCollection, words, size * sizeof(Keyword));
 
     delete[] words;
     words = newCollection;
     capacity = newCapacity;
 }
 
-void KeywordsCollection::populateKeywords(char* fileName) {
+DWORD KeywordsCollection::populateKeywords(char* fileName) {
 
     const DWORD BUF_SIZE = 1024;
     char buf[BUF_SIZE];
@@ -31,10 +31,15 @@ void KeywordsCollection::populateKeywords(char* fileName) {
             break; // EOF or error
 
         Keyword keyword(buf);
+
+        if (keyword.length > longestKeyword) longestKeyword = keyword.length;
+
         addKeyword(keyword);
        
     }
     fclose(f);
+
+    return longestKeyword;
 
 }
 
@@ -44,9 +49,5 @@ void KeywordsCollection::addKeyword(Keyword keyword) {
         resize();
     }
 
-    words[size] = keyword;
-    printf("%s\n", words[size].word);
-    
-    size++;
-
+    words[size++] = keyword;
 }
