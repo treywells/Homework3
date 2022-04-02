@@ -2,7 +2,7 @@
 
 Disk::Disk(DWORD slots, DWORD longestWord, char* fileName) : slots(slots), l(longestWord) {
 
-	if ((file = CreateFile(fileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == NULL) {
+	if ((file = CreateFile(fileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL)) == NULL) {
 		printf("Opening %s failed\n", fileName);
 		exit(-1);
 	}
