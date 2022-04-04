@@ -1,6 +1,7 @@
 #include "pch.h"
 
 Search::Search(DWORD b, DWORD l) : b(b), l(l), activeThreads(0) {
+	totalHits = 0;
 	InitializeCriticalSection(&cs);
 }
 
@@ -23,6 +24,7 @@ void Search::Run() {
 				if (strlen(match) <= l) break;
 
 				InterlockedIncrement(&(keywords->hits[i]));
+				InterlockedIncrement(&totalHits);
 
 				match = strstr(match + strlen(keywords->words[i]), keywords->words[i]);
 			}
