@@ -46,6 +46,9 @@ DWORD KeywordsCollection::populateKeywords(char* fileName) {
     }
     fclose(f);
 
+    hits = new DWORD[size];
+    memset(hits, 0x00, size * sizeof(DWORD));
+
     return longestKeyword;
 
 }
