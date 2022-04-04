@@ -2,7 +2,7 @@
 
 class KeywordsCollection {
 public: 
-	Keyword* words;
+	char** words;
 	DWORD size;
 	DWORD capacity;
 	DWORD longestKeyword;
