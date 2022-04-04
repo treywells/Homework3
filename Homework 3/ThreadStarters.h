@@ -11,3 +11,8 @@ inline DWORD _stdcall SearchThreadStarter(LPVOID p) {
 	s->Run();
 	return 0;
 }
+
+inline DWORD _stdcall StatThreadStarter(LPVOID p) {
+	Stats* p = (Stats*)p;
+	p->Run();
+}
