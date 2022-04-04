@@ -17,6 +17,7 @@ void Search::Run() {
 
 		// Perform the search
 		for (int i = 0; i < keywords->size; i++) {
+			int k = 1;
 			match = strstr(buf.ptr, keywords->words[i].word);
 			while (match) {
 				keywords->words[i].hits++;
@@ -24,26 +25,18 @@ void Search::Run() {
 				if (strlen(match) <= l) break;
 
 				match = strstr(match + keywords->words[i].length, keywords->words[i].word);
+				k++;
 			}
 		}
-
-		printf("Done searching block\n");
 
 		if (pcEmpty->Produce((char*)&slotID) == QUIT) return;
 
 		EnterCriticalSection(&cs);
-		if (--activeThreads == 0) {
-			printf("active threads is 0\n");
-			if (pcFull->diskDone) {
-				printf("disk is done, pcFull size: %d\n",pcFull->size);
-				if (pcFull->size == 0) {
-					SetEvent(pcFull->eventQuit);
-					SetEvent(pcEmpty->eventQuit);
-					printf("Setting event\n");
-					LeaveCriticalSection(&cs);
-					return;
-				}
-			}
+		if (--activeThreads == 0 && pcFull->diskDone && pcFull->size == 0) {
+			SetEvent(pcFull->eventQuit);
+			//SetEvent(pcEmpty->eventQuit);
+			LeaveCriticalSection(&cs);
+			return;
 		}
 		LeaveCriticalSection(&cs);
 

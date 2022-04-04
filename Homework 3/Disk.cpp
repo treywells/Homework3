@@ -2,10 +2,17 @@
 
 Disk::Disk(DWORD slots, DWORD longestWord, DWORD b, char* fileName) : slots(slots), l(longestWord), b(b) {
 
+    // Open with no buffering
 	if ((file = CreateFile(fileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL)) == NULL) {
 		printf("Opening %s failed\n", fileName);
 		exit(-1);
 	}
+
+    // Open with caching enabled
+    /*if ((file = CreateFile(fileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == NULL) {
+        printf("Opening %s failed\n", fileName);
+        exit(-1);
+    }*/
 
 	amountRead = 0;
     previousShadow = new char[l];
@@ -46,6 +53,8 @@ void Disk::Run() {
             exit(-1);
         }
 
+        if (bytesRead == 0) break;
+
         // Set the shadow buffers
         memcpy(buf + slotID * slotSize + shadowOffset, previousShadow, l);
         buf[slotID * slotSize + shadowSize + bytesRead] = NULL;
@@ -58,7 +67,7 @@ void Disk::Run() {
 
         if (pcFull->Produce((char*)&searchBuf) == QUIT) return;
 
-    } while (bytesRead > 0);
+    } while (1);
 
     pcFull->diskDone = true;
     pcEmpty->diskDone = true;

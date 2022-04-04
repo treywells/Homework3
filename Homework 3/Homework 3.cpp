@@ -5,6 +5,7 @@ int main(int argc, char** argv)
 
     CPU cpu;
     DWORD threads = cpu.cpus;
+    //DWORD threads = 1;
 
     DWORD numOfCmdArgs = 3;
 
@@ -20,7 +21,7 @@ int main(int argc, char** argv)
     KeywordsCollection keywords;
     DWORD l = keywords.populateKeywords(keywordFileName);
     DWORD nSlots = threads * 2;
-    DWORD b = 1 << 20;
+    DWORD b = 1 * (1 << 20);
 
     Disk disk(nSlots, l, b, wikiFileName);
 
@@ -60,7 +61,10 @@ int main(int argc, char** argv)
             exit(-1);
         }
 
-        SetThreadAffinityMask(searchThreads[i], i);
+        if (!SetThreadAffinityMask(searchThreads[i], 1 << (i % threads))) {
+            printf("Failed to set thread affinity mask\n");
+            exit(-1);
+        }
 
         if (!SetThreadPriority(searchThreads[i], -15)) {
             printf("Failed to set search thread priority\n");
@@ -76,7 +80,7 @@ int main(int argc, char** argv)
     }
 
     for (int i = 0; i < keywords.size; i++) {
-        printf("'%s' was found %d times\n", keywords.words[i].word, keywords.words[i].hits);
+        printf("[%d] %s = %d\n", i, keywords.words[i].word, keywords.words[i].hits);
     }
 
 }
