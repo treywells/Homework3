@@ -53,11 +53,10 @@ DWORD KeywordsCollection::populateKeywords(char* fileName) {
 
 }
 
-void KeywordsCollection::addKeyword(Keyword keyword) {
-
-    if (size == capacity) {
-        resize();
+KeywordsCollection::~KeywordsCollection() {
+    delete[] hits;
+    for (int i = 0; i < size; i++) {
+        delete[] words[i];
     }
-
-    //words[size++] = keyword;
+    delete[] words;
 }

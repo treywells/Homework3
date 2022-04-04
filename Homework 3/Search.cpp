@@ -7,6 +7,7 @@ Search::Search(DWORD b, DWORD l) : b(b), l(l), activeThreads(0) {
 void Search::Run() {
 
 	char* match;
+	int i = 1;
 
 	while (1) {
 		
@@ -17,15 +18,13 @@ void Search::Run() {
 
 		// Perform the search
 		for (int i = 0; i < keywords->size; i++) {
-			int k = 1;
-			match = strstr(buf.ptr, keywords->words[i].word);
+			match = strstr(buf.ptr, keywords->words[i]);
 			while (match) {
-				keywords->words[i].hits++;
-
 				if (strlen(match) <= l) break;
 
-				match = strstr(match + keywords->words[i].length, keywords->words[i].word);
-				k++;
+				InterlockedIncrement(&(keywords->hits[i]));
+
+				match = strstr(match + strlen(keywords->words[i]), keywords->words[i]);
 			}
 		}
 
@@ -34,11 +33,11 @@ void Search::Run() {
 		EnterCriticalSection(&cs);
 		if (--activeThreads == 0 && pcFull->diskDone && pcFull->size == 0) {
 			SetEvent(pcFull->eventQuit);
-			//SetEvent(pcEmpty->eventQuit);
 			LeaveCriticalSection(&cs);
 			return;
 		}
 		LeaveCriticalSection(&cs);
+		i++;
 
 
 	}

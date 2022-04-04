@@ -1,5 +1,30 @@
 #include "pch.h"
 
+void addCommas(DWORD num, char* buffer) {
+
+    memset(buffer, 0x00, 14);
+    DWORD digits = 1;
+    DWORD tempNum = num;
+    while (tempNum >= 10) {
+        tempNum /= 10;
+        digits++;
+    }
+    DWORD commas = (digits - 1) / 3;
+    DWORD totalCharacters = digits + commas;
+    DWORD iterations = 0;
+    for (int i = totalCharacters - 1; i > -1; i--) {
+        iterations++;
+        buffer[i] = '0' + (num % 10);
+        num /= 10;
+        if ((iterations % 3) == 0 && i != 0) {
+            i--;
+            buffer[i] = ',';
+        }
+    }
+
+    buffer[totalCharacters] = '\0';
+}
+
 int main(int argc, char** argv)
 {
 
@@ -20,6 +45,7 @@ int main(int argc, char** argv)
 
     KeywordsCollection keywords;
     DWORD l = keywords.populateKeywords(keywordFileName);
+
     DWORD nSlots = threads * 2;
     DWORD b = 1 * (1 << 20);
 
@@ -79,9 +105,14 @@ int main(int argc, char** argv)
         WaitForSingleObject(searchThreads[i],INFINITE);
     }
 
+    char commas[14];
+
     for (int i = 0; i < keywords.size; i++) {
-        printf("[%d] %s = %d\n", i, keywords.words[i].word, keywords.words[i].hits);
+        addCommas(keywords.hits[i], commas);
+        printf("[%d] %s = %s\n", i, keywords.words[i], commas);
     }
+
+    delete[] searchThreads;
 
 }
 

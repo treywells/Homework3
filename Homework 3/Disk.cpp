@@ -23,7 +23,7 @@ Disk::Disk(DWORD slots, DWORD longestWord, DWORD b, char* fileName) : slots(slot
     GetDiskFreeSpace(NULL, NULL, &sectorSize, NULL, NULL);
     // align max string length to sector size, which gives us the first shadow buffer length;
     // the second shadow buffer only holds a NULL and can be limited to just sectorSize
-    shadowSize = (longestWord / sectorSize + 1) * sectorSize;
+    shadowSize = (l / sectorSize + 1) * sectorSize;
     int nSlots = slots; // how many slots to maintain
     int padding = shadowSize + sectorSize; // both shadow buffers
     slotSize = b + padding; // full slot with padding
@@ -61,8 +61,8 @@ void Disk::Run() {
         memcpy(previousShadow, buf + slotID * slotSize + shadowSize + bytesRead - l, l);
 
         SearchBuffer searchBuf;
-        searchBuf.ptr = buf + slotID * slotSize + shadowSize;
-        searchBuf.size = bytesRead;
+        searchBuf.ptr = buf + slotID * slotSize + shadowOffset;
+        searchBuf.size = bytesRead + l;
         searchBuf.slotID = slotID;
 
         if (pcFull->Produce((char*)&searchBuf) == QUIT) return;
@@ -75,8 +75,8 @@ void Disk::Run() {
 }
 
 Disk::~Disk() {
-	delete[] buf;
     delete[] previousShadow;
+    HeapFree(buf, 0, NULL);
 }
 
 
